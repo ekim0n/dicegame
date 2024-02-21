@@ -5,7 +5,7 @@ import style from '../style/style'
 
 let board = []
 const NBR_OF_DICES = 5
-const NBR_OF_THROWS = 5
+const NBR_OF_THROWS = 3
 const WINNING_POINTS = 23
 
 export const GameBoard = () => {
@@ -13,46 +13,98 @@ export const GameBoard = () => {
     const [nbrOfWins, setNbrOfWins] = useState(0)
     const [sum, setSum] = useState(0)
     const [status, setStatus] = useState('')
+    const [selectedDices, setSelectedDices] = useState(new Array(NBR_OF_DICES).fill(false))
 
     const row = [];
     for (let i = 0; i < NBR_OF_DICES; i++) {
     row.push(
+        <Pressable
+            key={"row" + i}
+            onPress={()=> selectDice(i)}>
     <MaterialCommunityIcons
     name={board[i]}
     key={"row" + i}
     size={50}
-    color={"steelblue"}>
+    color={getDiceColor(i)}>
     </MaterialCommunityIcons>
+        </Pressable>
 
 );
 
 }
 
-    const throwDices = () => {
-        let sum = 0;
-        for (let  i = 0 ; i < NBR_OF_DICES; i++){
-            let randomNumber = Math.floor(Math.random() * 6 + 1)
-            board[i] = 'dice-' + randomNumber;
-            sum += randomNumber
+        function getDiceColor(i) {
+            if (board.every((val, i, arr) => val === arr[0])) {
+                return 'orange'
+            }
+            else{
+                return selectedDices[i] ? 'black' : 'steelblue'
+            } 
         }
-        setNbrOfThrowsLeft(nbrOfThrowsLeft - 1)
-        setSum(sum)
-    }
+
+        const selectDice = (i) => {
+            setSelectedDices((dices) => {
+                const updatedDices = [...dices];
+                updatedDices[i] = !dices[i];
+        
+                // Calculate the sum of selected dice values
+                const updatedSum = updatedDices.reduce((acc, isSelected, index) => {
+                    if (isSelected) {
+                        // Add the value of the selected dice
+                        acc += parseInt(board[index].split('-')[1], 10);
+                    }
+                    return acc;
+                }, 0);
+        
+                // Update the sum state
+                setSum(updatedSum);
+        
+                console.log(updatedDices);
+                console.log("Updated Sum:", updatedSum);
+        
+                return updatedDices;
+            });
+        };
+
+        const throwDices = () => {
+            
+            let rolledNumbers = [];
+        
+            for (let i = 0; i < NBR_OF_DICES; i++) {
+                if (!selectedDices[i]) {
+                    let randomNumber = Math.floor(Math.random() * 6 + 1);
+                    board[i] = 'dice-' + randomNumber;
+                    rolledNumbers.push(randomNumber);
+                    
+                    console.log("numero", randomNumber);
+                }
+            }
+            console.log(rolledNumbers)
+            setNbrOfThrowsLeft(nbrOfThrowsLeft - 1);
+           
+            
+        };
 
     const checkWinner = () => {
-        if (sum>= WINNING_POINTS && nbrOfThrowsLeft > 0) {
+        if (board.every((val, i, arr) => val === arr[0]) && nbrOfThrowsLeft > 0) {
             setNbrOfWins(nbrOfWins + 1)
             setStatus('You Won!')
+            setSum(0)
         }
-        else if (sum >= WINNING_POINTS && nbrOfThrowsLeft === 0) {
+        else if (board.every((val, i, arr) => val === arr[0]) && nbrOfThrowsLeft === 0) {
             setNbrOfWins(nbrOfWins + 1)
+            setSelectedDices(new Array(NBR_OF_DICES).fill(false))
             setStatus('You won, game over!')
+            setSum(0)
         }
-        else if (nbrOfWins > 0  && nbrOfThrowsLeft === 0) {
+        else if (nbrOfThrowsLeft === 0) {
             setStatus('You won, game over!')
+            setSelectedDices(new Array(NBR_OF_DICES).fill(false))
+            setSum(0)
         }
         else if (nbrOfThrowsLeft === 0) {
             setStatus('Game over!')
+            setSum(0)
         }
         else {
             setStatus('Keep throwing!')
