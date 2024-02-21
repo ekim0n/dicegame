@@ -130,7 +130,7 @@ export const GameBoard = () => {
         <View style={style.flex}>{row}</View>
         <Text style={style.gameinfo}>Sum: {sum}</Text>
         <Text style={style.gameinfo}>Throws left: {nbrOfThrowsLeft}</Text>
-        <Text style={style.gameinfo}>Nbr of wins: {nbrOfWins}</Text>
+        {<Text style={style.gameinfo}>Nbr of wins: {nbrOfWins}</Text>}
         <Text style={style.gameinfo}>{status}</Text>
         <Pressable style={style.button}
         onPress={() => throwDices()}>
