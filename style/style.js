@@ -7,7 +7,7 @@ export default StyleSheet.create({
   },
   header: {
     marginBottom: 15,
-    backgroundColor: 'skyblue',
+    backgroundColor: 'hotpink',
     flexDirection: 'row',
   },
   input: {
@@ -25,7 +25,7 @@ export default StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: 'lightgray',
+    backgroundColor: 'hotpink',
     padding: 10,
     alignItems: 'center',
     justifyContent: 'center',
