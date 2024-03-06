@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, Button } from "react-native";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 import {
@@ -23,6 +23,7 @@ export const GameBoard = ({navigation, route}) => {
   const [nbrOfThrowsLeft, setNumberOfThrowsLeft] = useState(NBR_OF_THROWS);
   const [status, setStatus] = useState("Throw dices");
   const [gameEndStatus, setGameEndStatus] = useState(false);
+  const [throwsCount, setThrowsCount] = useState(0);
 
   const [selectedDices, setSelectedDices] = useState(
     new Array(NBR_OF_DICES).fill(false)
@@ -115,16 +116,26 @@ export const GameBoard = ({navigation, route}) => {
           setDicePointsTotal(points)
           setSelectedDicePoints(selectedPoints)
           setNumberOfThrowsLeft(NBR_OF_THROWS)
-          return points[i]
+        } else {
+          setStatus('You already selected points for ' + (i + 1));
+          return;
         }
-        else {
-          setStatus('You already selected points for ' + (i + 1))
+    
+        if (throwsCount + 1 === NBR_OF_THROWS) {
+          useEffect(() => {
+            setSelectedDices(new Array(NBR_OF_DICES).fill(false));
+            setThrowsCount(0);
+          }, [throwsCount]);
+        } else {
+          setThrowsCount(throwsCount + 1);
+          setSelectedDices(new Array(NBR_OF_DICES).fill(false));
         }
+      } else {
+        setStatus('Throw ' + NBR_OF_THROWS + ' times before setting points');
       }
-      else {
-        setStatus("Throw " + NBR_OF_THROWS + " times before setting points")
-      }
-  }
+    };
+
+
 
   const throwDices = () => {
     let spots = [...diceSpots]
@@ -139,31 +150,43 @@ export const GameBoard = ({navigation, route}) => {
     }
     setDiceSpots(spots)
     setNumberOfThrowsLeft(nbrOfThrowsLeft - 1);
+    setThrowsCount(throwsCount + 1)
   };
 
   function getSpotTotal(i) {
     return dicePointsTotal[i]
   }
 
+  const calculateTotalPoints = () => {
+    const totalPoints = dicePointsTotal.reduce((total, points) => total + points, 0);
+     // Apply bonus points if the total exceeds the limit
+    const totalWithBonus = totalPoints >= BONUS_POINTS_LIMIT ? totalPoints + BONUS_POINTS : totalPoints;
+
+    return totalWithBonus;
+  };
+
   return (
     <>
       <Header />
       <View style={style.gameboard}>
-        <Container>
+        <Container style={{marginTop: 10}}>
           <Row>{row}</Row>
         </Container>
-        <Text>Throws left: {nbrOfThrowsLeft}</Text>
+        <Text style={{ marginBottom: 20 }}>Throws left: {nbrOfThrowsLeft}</Text>
         <Text>{status}</Text>
-        <Pressable onPress={() => throwDices()}>
-          <Text>Throw Dices</Text>
-        </Pressable>
-        <Container>
+        <Button
+        title="Throw Dices"
+        onPress={throwDices}
+        color="steelblue" 
+      />
+        <Container style={{ marginTop: 20 }}>
           <Row>{pointsRow}</Row>
         </Container>
         <Container>
           <Row>{pointsToSelectRow}</Row>
         </Container>
-        <Text>Player Name: {playerName}</Text>
+        <Text style={{ marginTop: 20 }}>Player Name: {playerName}</Text>
+        <Text style={{ marginTop: 20 }}>Total points:{calculateTotalPoints()}  </Text>
       </View>
       <Footer />
     </>

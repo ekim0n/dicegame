@@ -6,15 +6,29 @@ export default StyleSheet.create({
     backgroundColor: '#fff'
   },
   header: {
-    marginTop: 30,
     marginBottom: 15,
     backgroundColor: 'skyblue',
     flexDirection: 'row',
   },
-  footer: {
+  input: {
+    height: 40,
+    width: '80%',
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 20,
     marginTop: 20,
-    backgroundColor: 'skyblue',
-    flexDirection: 'row'
+    paddingLeft: 10,
+    borderRadius: 20,
+  },
+  footer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'lightgray',
+    padding: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   title: {
     color: '#fff',

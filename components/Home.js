@@ -38,7 +38,7 @@ export default Home = ({ navigation }) => {
   return (
     <>
       <Header />
-      <View>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginBottom: 50 }}>
         <MaterialCommunityIcons
           name="information"
           size={90}
@@ -47,18 +47,20 @@ export default Home = ({ navigation }) => {
         {!hasPlayerName ? 
           <>
             <Text>For scoreboard enter your name...</Text>
-            <TextInput onChangeText={setPlayerName} autoFocus={true} />
-            <Pressable onPress={() => handlePlayerName(playerName)}>
-              <Text>OK</Text>
-            </Pressable>
+            <TextInput style={style.input} onChangeText={setPlayerName} autoFocus={true} />
+            <Button 
+            title="OK"
+            onPress={() => handlePlayerName(playerName)}>
+              
+            </Button>
           </>
          : 
           <>
             <Text>Rules of the game</Text>
-            <Text multiline="true">
+            <Text style={{ marginTop: 10 }} multiline="true">
               THE GAME: Upper section of the classic Yahtzee dice game. You have{" "}
               {NBR_OF_DICES} dices and for the every dice you have{" "}
-              {NBR_OF_THROWS}
+              {NBR_OF_THROWS} {" "}
               throws. After each throw you can keep dices in order to get same
               dice spot counts as many as possible. In the end of the turn you
               must select your points from {MIN_SPOT} to {MAX_SPOT}. Game ends
@@ -67,15 +69,17 @@ export default Home = ({ navigation }) => {
               dices you selected. Only the dices having the same spot count are
               calculated. Inside the game you can not select same points from
               {MIN_SPOT} to {MAX_SPOT} again. GOAL: To get points as much as
-              possible.
+              possible.{" "}
               {BONUS_POINTS_LIMIT} points is the limit of getting bonus which
-              gives you {BONUS_POINTS}
+              gives you  {BONUS_POINTS}{" "}
               points more.
             </Text>
-            <Text>Good Luck! {playerName}</Text>
-            <Pressable onPress={() => navigation.navigate("Gameboard", {player: playerName})}>
-              <Text>PLAY</Text>
-            </Pressable>
+            <Text style={{ marginTop: 10 }}>Good Luck! {playerName}</Text>
+            <Button 
+            title="PLAY"
+            onPress={() => navigation.navigate("Gameboard", {player: playerName})}>
+              
+            </Button>
           </>
         }
       </View>
